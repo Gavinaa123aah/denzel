@@ -10,6 +10,22 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
+app.get('/movies/populate', function (req, res) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("denze");
+    dbo.collection("movies"). find({}).toArray(function(err, result) { // 返回集合中所有数据
+        if (err) throw err;
+        len = result.length
+        console.log(len)
+        var countt = {"count":len}
+        res.send(countt);
+        db.close();
+    });
+});
+ 
+});
+
 app.get('/movies', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
@@ -52,6 +68,7 @@ app.get('/movie/:id', function (req, res) {
     dbo.collection("movies"). find(whereStr).limit(count).toArray(function(err, result) { // 返回集合中所有数据
         if (err) throw err;
         console.log(result);
+        console.log(typeof result)
         res.send(result);
         db.close();
     });
@@ -74,7 +91,6 @@ app.get('/movie/:id', function (req, res) {
         db.close();
     });
   });
-  //  res.send('post new movie');
  });
  
  
