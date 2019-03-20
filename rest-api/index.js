@@ -17,7 +17,21 @@ app.get('/movies', function (req, res) {
 });
 });
 
-
+app.get('/movie/:id', function (req, res) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("denze");
+    console.log(req.params.id)
+    var whereStr = {"id":req.params.id}; 
+    dbo.collection("movies"). find(whereStr).toArray(function(err, result) { // 返回集合中所有数据
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+        db.close();
+    });
+});
+  
+ });
  
 
  app.post('/movies/search', function (req, res) {
