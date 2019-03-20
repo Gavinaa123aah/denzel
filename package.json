@@ -4,6 +4,7 @@
   "description": "The must-watch Denzel's movies",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
     "jsonfile": "^5.0.0",
     "node-fetch": "^2.3.0",
     "p-limit": "^2.2.0",
