@@ -17,7 +17,7 @@ app.get('/movies', function (req, res) {
 });
 });
 
-app.get('/movie/:id', function (req, res) {
+app.get('/movies/:id', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("denze");
@@ -43,7 +43,7 @@ app.get('/movie/:id', function (req, res) {
  });
  
  
-var server = app.listen(8081, function () {
+var server = app.listen(9292, function () {
  
   var host = server.address().address
   var port = server.address().port
