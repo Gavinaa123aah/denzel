@@ -1,7 +1,13 @@
 var express = require('express');
+let bodyParser = require('body-parser');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost";
+// Configure bodyparser to handle post requests
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 
 app.get('/movies', function (req, res) {
@@ -53,7 +59,22 @@ app.get('/movie/:id', function (req, res) {
  });
 
  app.post('/movies/:id', function (req, res) {
-   res.send('post new movie');
+   console.log(req.body.date)
+   console.log(req.body.review)
+   console.log(req.params.id)
+   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("denze");
+    var whereStr = {"id":req.params.id}; 
+    var updateStr = {$set: { "date" : req.body.date,"review":req.body.review}};
+    dbo.collection("movies").updateOne(whereStr, updateStr,function(err, result) { // 返回集合中所有数据
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+        db.close();
+    });
+  });
+  //  res.send('post new movie');
  });
  
  
@@ -62,6 +83,6 @@ var server = app.listen(9292, function () {
   var host = server.address().address
   var port = server.address().port
  
-  console.log("应用实例，访问地址为 http://%s:%s", host, port)
+  console.log("address and port is  http://%s:%s", host, port)
  
 })
