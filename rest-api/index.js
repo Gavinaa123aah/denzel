@@ -17,7 +17,7 @@ app.get('/movies', function (req, res) {
 });
 });
 
-app.get('/movies/:id', function (req, res) {
+app.get('/movie/:id', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("denze");
@@ -34,8 +34,22 @@ app.get('/movies/:id', function (req, res) {
  });
  
 
- app.post('/movies/search', function (req, res) {
-   res.send('movies search');
+ app.get('^/movies/search', function (req, res) {
+   console.log(req.query.limit);
+   console.log(req.query.metascore);
+   var score = parseInt(req.query.metascore)
+   var count = parseInt(req.query.limit)
+   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("denze");
+    var whereStr = {"metascore":{$gt: score}}; 
+    dbo.collection("movies"). find(whereStr).limit(count).toArray(function(err, result) { // 返回集合中所有数据
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+        db.close();
+    });
+  });
  });
 
  app.post('/movies/:id', function (req, res) {
