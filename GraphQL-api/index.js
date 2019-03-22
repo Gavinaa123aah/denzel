@@ -9,6 +9,7 @@ var schema = buildSchema(`
         populate: Int
         movie(id: String!): Movie
         movies: Movie
+        search(limit:Int, metascore:Int): [Movie]
       
     },
     type Course {
@@ -707,12 +708,25 @@ var must_watch = function(){
   var num = Math.round(Math.random() * 56)
   return moviesData[num]
 }
+var get_search = function(args){
+  
+  var metascore_value = args.metascore
+  var limit_value = args.limit
+  if (limit_value==null){
+     limit_value=5
+  }
+  return moviesData.filter(m => m.metascore > metascore_value).slice(0,limit_value)
+  // return moviesData.slice(0,5)
+}
+
+
 
 var root = {
     populate:getpopulate,
     movies: must_watch,
     movie: get_movie_by_id,
-    course: getCourse
+    course: getCourse,
+    search: get_search
 };
 
 // Root resolver
