@@ -36,5 +36,6 @@ let directors = [{
 }
 ];
 
+console.log(movies)
 exports.movies = movies;
 exports.directors = directors;
