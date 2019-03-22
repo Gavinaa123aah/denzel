@@ -2,7 +2,7 @@ var express = require('express');
 let bodyParser = require('body-parser');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost";
+var url = "mongodb+srv://chp:chp1995@cluster0-dzevi.mongodb.net/test?retryWrites=true";
 // Configure bodyparser to handle post requests
 app.use(bodyParser.urlencoded({
   extended: true
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.get('/movies/populate', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("denze");
+    var dbo = db.db("webDenzel");
     dbo.collection("movies"). find({}).toArray(function(err, result) { // 返回集合中所有数据
         if (err) throw err;
         len = result.length
@@ -29,11 +29,12 @@ app.get('/movies/populate', function (req, res) {
 app.get('/movies', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("denze");
+    var dbo = db.db("webDenzel");
     dbo.collection("movies"). find({}).toArray(function(err, result) { // 返回集合中所有数据
         if (err) throw err;
         console.log(result);
-        res.send(result);
+        var round_num = Math.round(Math.random()); 
+        res.send(result[round_num]);
         db.close();
     });
 });
@@ -42,7 +43,7 @@ app.get('/movies', function (req, res) {
 app.get('/movie/:id', function (req, res) {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("denze");
+    var dbo = db.db("webDenzel");
     console.log(req.params.id)
     var whereStr = {"id":req.params.id}; 
     dbo.collection("movies"). find(whereStr).toArray(function(err, result) { // 返回集合中所有数据
@@ -63,7 +64,7 @@ app.get('/movie/:id', function (req, res) {
    var count = parseInt(req.query.limit)
    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("denze");
+    var dbo = db.db("webDenzel");
     var whereStr = {"metascore":{$gt: score}}; 
     dbo.collection("movies"). find(whereStr).limit(count).toArray(function(err, result) { // 返回集合中所有数据
         if (err) throw err;
@@ -81,7 +82,7 @@ app.get('/movie/:id', function (req, res) {
    console.log(req.params.id)
    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
-    var dbo = db.db("denze");
+    var dbo = db.db("webDenzel");
     var whereStr = {"id":req.params.id}; 
     var updateStr = {$set: { "date" : req.body.date,"review":req.body.review}};
     dbo.collection("movies").updateOne(whereStr, updateStr,function(err, result) { // 返回集合中所有数据
